@@ -1,0 +1,204 @@
+.top {
+	border-bottom: 2rpx solid #e9e9e9;
+	padding: 30rpx;
+	.tab {
+		margin: 0 auto;
+		width: 400rpx;
+		height: 60rpx;
+		border: 2rpx solid $themeColor;
+		box-sizing: border-box;
+		color: #999;
+		view {
+			width: 50%;
+			height: 100%;
+			font-size: 24rpx;
+			&.active {
+				color: #fff;
+				background-color: $themeColor;
+			}
+		}
+	}
+	.btn {
+		height: 80rpx;
+		background: $themeColor;
+		border-radius: 40rpx;
+		font-size: 26rpx;
+		color: #fff;
+		margin-top: 40rpx;
+		image {
+			width: 42rpx;
+			height: auto;
+			margin-right: 24rpx;
+		}
+	}
+}
+.ccolor {
+	&-top {
+		padding: 30rpx;
+		.title {
+			font-size: 30rpx;
+			font-weight: bold;
+			padding-bottom: 30rpx;
+		}
+		.chooseBox {
+			.item {
+				font-size: 22rpx;
+				text-align: center;
+				color: #666;
+				.type {
+					width: 160rpx;
+					height: 56rpx;
+					border-radius: 28rpx;
+					font-size: 24rpx;
+					color: #666;
+					margin-bottom: 10rpx;
+					border: 2rpx solid #aaa;
+				}
+				&.active {
+					color: #333;
+					.type {
+						color: #fff;
+						border-color: $themeColor;
+						background-color: $themeColor;
+					}
+				}
+			}
+		}
+	}
+	.colorBox {
+		width: 100%;
+		height: 750rpx;
+		position: relative;
+		.bg {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+			background-color: #fff;
+			z-index: -1;
+		}
+		.picBox {
+			width: 100%;
+			height: 100%;
+			flex-wrap: wrap;
+			image {
+				display: block;
+			}
+			// 2px
+			.tile0 {
+				width: 32.97%;
+				height: 32.97%;
+				margin-bottom: 0.53%;
+			}
+			// 3px
+			.tile1 {
+				width: 32.8%;
+				height: 32.8%;
+				margin-bottom: 0.8%;
+			}
+			// 5px
+			.tile2 {
+				width: 32.4%;
+				height: 32.4%;
+				margin-bottom: 1.33%;
+			}
+		}
+	}
+	.colorNav {
+		padding: 30rpx;
+		.item {
+			margin-right: 40rpx;
+			margin-bottom: 27rpx;
+			font-size: 26rpx;
+			color: #999999;
+			box-sizing: border-box;
+			image {
+				width: 50rpx;
+				height: 50rpx;
+				border: 2rpx solid #eee;
+			}
+			&.active {
+				color: #333333;
+				image {
+					border-color: #333;
+				}
+			}
+		}
+	}
+	.proList {
+		font-size: 26rpx;
+		padding-bottom: 40rpx;
+		padding-top: 20rpx;
+		color: #666;
+		border-top: 2rpx solid #e9e9e9;
+		.title {
+			padding: 0 16rpx;
+			border-right: 2rpx solid #e9e9e9;
+		}
+		.list {
+			.item {
+				padding: 20rpx 0;
+				margin: 0 16rpx;
+				width: 80rpx;
+				text-align: center;
+				border-bottom: 2rpx solid #fff;
+				&.active {
+					color: $themeColor;
+					border-color: $themeColor;
+				}
+			}
+		}
+	}
+}
+.price {
+	.infoBox{
+		padding: 30rpx;
+		.title{
+			font-size: 30rpx;
+			padding-bottom: 49rpx;
+			font-weight: bold;
+		}
+		.row{
+			padding-bottom: 30rpx;
+			.title2{
+				font-size: 22rpx;
+				padding-bottom: 14rpx;
+			}
+			.iptBox{
+				width:310rpx;
+				height:56rpx;
+				padding: 0 20rpx;
+				box-sizing: border-box;
+				border:2rpx solid rgba(204,204,204,1);
+				border-radius:4rpx;
+				font-size: 24rpx;
+				input{
+					width: 200rpx;
+				}
+			}
+			.iptBox-l{
+				width: 100%;
+				background-color: #CCCCCC;
+				text-align: right;
+				input{
+					width: 100%;
+				}
+			}
+		}
+	}
+	.btnBox{
+		padding: 30rpx;
+		font-size: 26rpx;
+		.btn{
+			height:80rpx;
+			border:2rpx solid rgba(254,209,0,1);
+			border-radius:40rpx;
+		}
+		.active{
+			background-color: $themeColor;
+			color: #fff;
+			margin-top: 30rpx;
+		}
+	}
+}

@@ -3,14 +3,71 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "首页"
+			}
+		}, {
+			"path": "pages/order/order",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		}, {
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}, {
+			"path": "pages/matchColor/matchColor",
+			"style": {
+				"navigationBarTitleText": "配色估价"
+			}
+		}, {
+			"path": "pages/enter/enter",
+			"style": {
+				"navigationBarTitleText": "师傅入驻"
+			}
+		}, {
+			"path": "pages/circle/circle",
+			"style": {
+				"navigationBarTitleText": "师傅圈"
+			}
+		}, {
+			"path": "pages/circle/circleDetail",
+			"style": {
+				"navigationBarTitleText": "师傅主页"
+			}
+		}, {
+			"path": "pages/circle/send",
+			"style": {
+				"navigationBarTitleText": "发布动态"
 			}
 		}
 	],
+	"tabBar": {
+		"color": "#AAAAAA",
+		"selectedColor": "#333333",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"iconPath": "static/tab/tab1.png",
+			"selectedIconPath": "static/tab/tab1A.png",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/order/order",
+			"iconPath": "static/tab/tab2.png",
+			"selectedIconPath": "static/tab/tab2A.png",
+			"text": "订单"
+		}, {
+			"pagePath": "pages/mine/mine",
+			"iconPath": "static/tab/tab3.png",
+			"selectedIconPath": "static/tab/tab3A.png",
+			"text": "我的"
+		}]
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarTitleText": "美缝",
+		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#F8F8F8"
 	}
 }
