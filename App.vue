@@ -2,6 +2,24 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			uni.login({
+			  provider: 'weixin',
+			  success: function (res) {
+			    console.log('code:',res.code);
+				uni.setStorageSync('code',res.code);
+			  }
+			});
+			this.request({
+				url: '/login/webInfo',
+				data: {
+					token: uni.getStorageSync('token'),
+				},
+				success: res => {
+					console.log("网站信息配置:",res);
+					uni.setStorageSync('webInfo',res.data.data);
+					uni.hideLoading();
+				},
+			});
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -73,5 +91,17 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+	}
+	
+	.clear-btn{
+	  padding: 0;
+	  margin: 0;
+	  background: rgba(0,0,0,0);
+	  color: inherit;
+	  font-size: inherit;
+	  line-height: initial;
+	}
+	.clear-btn::after {
+	  border: none;
 	}
 </style>

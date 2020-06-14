@@ -3,12 +3,8 @@
 		<view class="bg"></view>
 		<view class="infoBox flex-center">
 			<view>
-				<image
-					class="circle"
-					src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590735968292&di=8252314f7136508dd0bcad14f55a6c3f&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201810%2F28%2F20181028190837_scyfn.thumb.700_0.jpeg"
-					mode="aspectFill"
-				></image>
-				<view>吴师傅</view>
+				<image class="circle" :src="userInfo.header_img" mode="aspectFill"></image>
+				<view>{{ userInfo.name }}</view>
 			</view>
 		</view>
 		<view class="btnBox flex-between">
@@ -18,24 +14,23 @@
 					<view>配色估价</view>
 				</view>
 			</navigator>
-			<navigator url="../enter/enter" hover-class="none">
-				<view class="btn flex-center">
-					<view class="icon flex-center circle"><image src="../../static/icon-rz.png" mode="widthFix"></image></view>
-					<view>师傅入驻</view>
-				</view>
-			</navigator>
+			<view class="btn flex-center" @click="goEnter">
+				<view class="icon flex-center circle"><image src="../../static/icon-rz.png" mode="widthFix"></image></view>
+				<view>师傅入驻</view>
+			</view>
 		</view>
 		<view class="list">
-			<navigator url="../circle/circleDetail" hover-class="none">
+			<navigator :url="'../circle/circleDetail?id='+userInfo.id" hover-class="none" v-if="applyStatus == 3">
 				<view class="item flex-between">
 					<view class="flex">
 						<image class="icon" src="../../static/icon-sy.png" mode="widthFix"></image>
-						<view>师傅主页</view>
+						<view>我的主页</view>
 					</view>
 					<image class="right" src="../../static/right-b.png" mode="widthFix"></image>
 				</view>
 			</navigator>
-			<navigator url="../circle/circle" hover-class="none">
+			<!-- <navigator url="../circle/circle" hover-class="none"> -->
+			<navigator url="../circle/circleDetail?id=all" hover-class="none">
 				<view class="item flex-between">
 					<view class="flex">
 						<image class="icon" src="../../static/icon-q.png" mode="widthFix"></image>
@@ -72,7 +67,52 @@
 <script>
 export default {
 	data() {
-		return {};
+		return {
+			userInfo: '',
+			applyStatus: '' //1 未申请 2待审核 3 已通过 4已拒绝
+		};
+	},
+	methods: {
+		goEnter(){
+			if(this.applyStatus==1){
+				uni.navigateTo({
+					url:'../enter/enter'
+				});
+			}else if(this.applyStatus==2){
+				uni.showToast({
+					title:'正在审核中，请耐心等待',
+					icon:'none'
+				});
+			}else if(this.applyStatus==3){
+				uni.showToast({
+					title:'已入驻成功',
+					icon:'none'
+				});
+			}else if(this.applyStatus==4){
+				uni.showToast({
+					title:'入驻申请被拒绝，如有疑问请联系客服',
+					icon:'none'
+				});
+			}
+		},
+		getApplyStatus() {
+			this.request({
+				url: '/User/applyStatus',
+				data: {
+					token: uni.getStorageSync('token')
+				},
+				success: res => {
+					console.log('审核状态:', res);
+					this.applyStatus = res.data.data; //1 未申请 2待审核 3 已通过 4已拒绝
+				}
+			});
+		}
+	},
+	onLoad() {
+		this.userInfo = uni.getStorageSync('userInfo');
+	},
+	onShow() {
+		this.getApplyStatus();
 	}
 };
 </script>

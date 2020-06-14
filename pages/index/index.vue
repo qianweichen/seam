@@ -1,18 +1,13 @@
 <template>
 	<view class="content">
 		<swiper class="swiper" indicator-dots autoplay circular>
-			<swiper-item>
-				<image
-					src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590728921828&di=3fb0e3849c22847e5ec601f79487c1f0&imgtype=0&src=http%3A%2F%2Fimglf3.nosdn.127.net%2Fimg%2FL0lHRjFqbkVQa2pIQXFwYWE2WUd6Q3A4dUN5aFJhZlBOaTd0b3VDVFlQNUNTeGpQUGpZbGF3PT0.jpg%3FimageView%26thumbnail%3D1680x0%26quality%3D96%26stripmeta%3D0%26type%3Djpg%257Cwatermark%26type%3D2%26text%3Dwqkg"
-					mode="aspectFill"
-				></image>
-			</swiper-item>
+			<swiper-item v-for="(item, index) in bannerList" :key="index"><image :src="imgUrl + item.img" mode="aspectFill"></image></swiper-item>
 		</swiper>
 		<swiper class="notice" vertical autoplay circular>
-			<swiper-item v-for="(item, index) in 3" :key="index">
+			<swiper-item v-for="(item, index) in tipList" :key="index">
 				<view class="noticeItem flex">
 					<image src="../../static/icon-gg.png" mode="widthFix"></image>
-					<text>最新预约:138494****6已预约服务</text>
+					<text>最新预约:{{ item.phone }}已预约服务</text>
 				</view>
 			</swiper-item>
 		</swiper>
@@ -20,19 +15,20 @@
 			<view class="iptBox flex">
 				<image src="../../static/icon-ren.png" mode="widthFix"></image>
 				<view class="line"></view>
-				<input type="text" placeholder="请输入姓名" />
+				<input type="text" placeholder="请输入姓名" v-model="props.name" />
 			</view>
 			<view class="iptBox flex">
 				<image src="../../static/icon-dh.png" mode="widthFix"></image>
 				<view class="line"></view>
-				<input type="number" placeholder="请输入电话" />
+				<input type="number" placeholder="请输入电话" v-model="props.phone" />
 			</view>
-			<view class="iptBox flex" @click="openMap">
+			<view class="iptBox flex" @click="chooseAdd">
 				<image src="../../static/icon-dw.png" mode="widthFix"></image>
 				<view class="line"></view>
-				<input disabled type="text" placeholder="请在地图选择位置" />
+				<input disabled type="text" placeholder="请在地图选择位置" v-model="props.address" />
 			</view>
-			<view class="btn flex-center">立即预约</view>
+			<view v-if="isLogin" class="btn flex-center" @click="submit">立即预约</view>
+			<button v-else open-type="getUserInfo" class="clear-btn" @getuserinfo="getUserInfo"><view class="btn flex-center">立即预约</view></button>
 		</view>
 		<view class="copy">©河南前途装饰工程有限公司</view>
 	</view>
@@ -42,11 +38,128 @@
 export default {
 	data() {
 		return {
-			title: 'Hello'
+			imgUrl: this.imgUrl,
+			isLogin: false,
+			bannerList: [],
+			tipList: [],
+			props: {
+				name: '',
+				phone: '',
+				address: '',
+				longitude: '',
+				dimension: ''
+			}
 		};
 	},
-	onLoad() {},
-	methods: {}
+	onLoad() {
+		if (this.getIsLogin()) {
+			this.isLogin = true;
+		}
+		this.getBanner();
+		this.getTip();
+	},
+	methods: {
+		chooseAdd() {
+			uni.chooseLocation({
+				success: res => {
+					console.log('位置:', res);
+					this.props.address = res.address;
+					this.props.longitude = res.longitude;
+					this.props.dimension = res.latitude;
+				}
+			});
+		},
+		//轮播图
+		getBanner() {
+			uni.showLoading({
+				title: '加载中'
+			});
+			this.request({
+				url: '/login/banner',
+				data: {
+					token: uni.getStorageSync('token')
+				},
+				success: res => {
+					console.log('轮播图:', res);
+					this.bannerList = res.data.data;
+					uni.hideLoading();
+				}
+			});
+		},
+		//跑马灯
+		getTip() {
+			uni.showLoading({
+				title: '加载中'
+			});
+			this.request({
+				url: '/login/horseRaceLamp',
+				data: {
+					token: uni.getStorageSync('token')
+				},
+				success: res => {
+					console.log('跑马灯:', res);
+					this.tipList = res.data.data;
+					uni.hideLoading();
+				}
+			});
+		},
+		//预约
+		submit() {
+			if (!this.props.name) {
+				uni.showToast({
+					title: '请输入姓名',
+					icon: 'none'
+				});
+				return;
+			}
+			if (!this.props.phone) {
+				uni.showToast({
+					title: '请输入电话',
+					icon: 'none'
+				});
+				return;
+			}
+			if (!this.props.address) {
+				uni.showToast({
+					title: '请选择地址',
+					icon: 'none'
+				});
+				return;
+			}
+			if (!this.checkPhone(this.props.phone)) {
+				uni.showToast({
+					title: '手机号格式有误',
+					icon: 'none'
+				});
+				return;
+			}
+			this.props.token = uni.getStorageSync('token');
+			uni.showLoading({
+				title: '加载中'
+			});
+			this.request({
+				url: '/User/createOrders',
+				data: this.props,
+				success: res => {
+					console.log('预约:', res);
+					uni.showToast({
+						title: res.data.msg
+					});
+					this.props = {
+						name: '',
+						phone: '',
+						address: '',
+						longitude: '',
+						dimension: ''
+					};
+					uni.hideLoading();
+				}
+			});
+		},
+		getUserInfo(e) {
+			this.login(e.detail); //登陆
+		}
+	}
 };
 </script>
 

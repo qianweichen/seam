@@ -1,3 +1,15 @@
+<!-- 图片上传	https://ext.dcloud.net.cn/plugin?id=63#detail
+import sunUiUpimg from '@/components/sunui-upimg/sunui-upimg.vue';
+components: {
+	'sunUiUpimg': sunUiUpimg
+},
+
+<sunui-upimg @change="getImageInfo1" :upload_auto="true" ref="upimg1" :upload_count="2"></sunui-upimg>
+
+getImageInfo1(e) {
+	console.log('图片返回1：', e)
+},
+ -->
 <template>
 	<view class="sunui-uploader-bd">
 		<view class="sunui-uploader-files">
@@ -92,7 +104,7 @@ export default {
 				return promisify(upload)({
 					url: _self.url,
 					path: path,
-					name: 'file',
+					name: 'files',
 					extra: header,
 					_self: _self
 				});
@@ -196,7 +208,7 @@ const upload = function(options) {
 			console.warn('sunui-upimg - 如发现没有获取到返回值请到源码191行修改后端返回图片路径以便正常使用插件', JSON.parse(data));
 			try {
 				//Tip : 切记->主要修改这里图片的返回值为真实返回路径!!! 详情见示例
-				data = JSON.parse(res.data).info;
+				data = JSON.parse(res.data).data;
 			} catch (e) {
 				throw (e, data);
 			}
