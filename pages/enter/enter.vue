@@ -140,6 +140,9 @@ export default {
 						title: res.data.msg,
 						icon: 'none'
 					});
+					setTimeout(()=>{
+						uni.navigateBack();
+					},1500);
 				}
 			});
 		},

@@ -6,8 +6,17 @@ Vue.prototype.uploadUrl = 'https://mf.xjie.vip/admin/webinfo/upload';
 Vue.prototype.imgUrl = 'https://mf.xjie.vip';
 
 //登陆
-Vue.prototype.login = function(userInfo) {
-	console.log(userInfo);
+Vue.prototype.login = function(userInfo,callBack) {
+	// console.log(userInfo);
+	if(!userInfo.rawData){
+		return;
+	}
+	var query = {
+		signature: userInfo.signature,
+		encryptedData: userInfo.encryptedData,
+		iv: userInfo.iv,
+		rawData: userInfo.rawData
+	}
 	uni.showLoading({
 		title: '加载中'
 	});
@@ -15,10 +24,7 @@ Vue.prototype.login = function(userInfo) {
 		url: '/Login/dologin',
 		data: {
 			code: uni.getStorageSync('code'),
-			signature: userInfo.signature,
-			encryptedData: userInfo.encryptedData,
-			iv: userInfo.iv,
-			rawData: userInfo.rawData
+			...query
 		},
 		success: res => {
 			console.log("登陆:", res);
@@ -34,6 +40,9 @@ Vue.prototype.login = function(userInfo) {
 					console.log("用户个人信息:", res);
 					uni.setStorageSync('userInfo', res.data.data);
 					uni.hideLoading();
+					if(callBack){
+						callBack();
+					}
 				},
 			});
 		},

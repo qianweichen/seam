@@ -1,46 +1,48 @@
 <template>
-	<view>
+	<view style="padding-bottom: 200rpx;">
 		<view v-if="myCircle">
 			<view class="item flex align-star">
-				<image class="header circle" src="../../static/dizhuan.png" mode="aspectFill"></image>
+				<image class="header circle" :src="userInfo.header_img" mode="aspectFill"></image>
 				<view class="info">
 					<view class="flex-between">
 						<view class="flex">
-							<view class="name">张帅博</view>
-							<view class="tag flex-center">5年经验</view>
+							<view class="name">{{ userInfo.name }}</view>
+							<view class="tag flex-center">{{ userInfo.duration }}年经验</view>
 						</view>
-						<view class="flex position">
+						<!-- <view class="flex position">
 							<image src="../../static/icon-dw.png" mode="widthFix"></image>
 							<view>1.04km</view>
-						</view>
+						</view> -->
 					</view>
-					<view class="address">广东省深圳市南山区前海大道嘉苑小 区12栋20楼</view>
+					<view class="address">{{ userInfo.address }}</view>
 				</view>
 			</view>
-			<view class="tip">专业美缝，欢迎咨询</view>
+			<view class="tip">{{ userInfo.brief }}</view>
 		</view>
 		<view class="dynamic">
 			<!-- <view class="title">师傅动态</view> -->
 			<view class="dynamic-item flex-between align-star" v-for="(item, index) in list" :key="index">
 				<image class="header circle" :src="item.uid.header_img" mode="aspectFill"></image>
 				<view class="right">
-					<view class="name">{{item.uid.name}}</view>
-					<view class="content">{{item.content}}</view>
+					<view class="name">{{ item.uid.name }}</view>
+					<view class="content">{{ item.content }}</view>
 					<view class="imgbox flex">
-						<image v-for="(items,indexs) in item.img" :key="indexs" :src="items" mode="aspectFill" @click="browseImg(item.img,indexs)"></image>
+						<image v-for="(items, indexs) in item.img" :key="indexs" :src="items" mode="aspectFill" @click="browseImg(item.img, indexs)"></image>
 					</view>
 					<view class="flex-between bottom">
-						<view>{{item.add_time}}</view>
+						<view>{{ item.add_time }}</view>
 						<view class="flex">
-							<image class="good" :src="'../../static/good'+(item.is_fabulous==0?'':'A') + '.png'" mode="widthFix" @click="like(item.id,index)"></image>
-							<view>{{item.fabulous_num}}</view>
+							<image class="good" :src="'../../static/good' + (item.is_fabulous == 0 ? '' : 'A') + '.png'" mode="widthFix" @click="like(item.id, index)"></image>
+							<view>{{ item.fabulous_num }}</view>
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="fixedBtn flex" v-if="myCircle">
-			<view class="share flex-center">分享</view>
+			<button open-type="share" class="clear-btn share flex-center">
+				分享
+			</button>
 			<navigator class="send flex-center" url="./send" hover-class="none"><view>发布动态</view></navigator>
 		</view>
 	</view>
@@ -52,13 +54,27 @@ export default {
 		return {
 			myCircle: '',
 			id: '',
-			page:1,
-			list:[]
+			page: 1,
+			list: [],
+			userInfo: ''
 		};
 	},
 	methods: {
+		getUserInfo() {
+			this.request({
+				url: '/User/userInfo',
+				data: {
+					token: uni.getStorageSync('token'),
+					id: this.id
+				},
+				success: res => {
+					console.log('用户个人信息:', res);
+					this.userInfo = res.data.data;
+				}
+			});
+		},
 		getDynaic(isFirstPage) {
-			if(isFirstPage){
+			if (isFirstPage) {
 				this.page = 1;
 				this.list = [];
 			}
@@ -70,13 +86,13 @@ export default {
 				data: {
 					token: uni.getStorageSync('token'),
 					uid: this.id,
-					type: this.myCircle ? 2 : 1	,//1为所有人 2位个人
-					page:this.page
+					type: this.myCircle ? 2 : 1, //1为所有人 2位个人
+					page: this.page
 				},
 				success: res => {
 					console.log('动态:', res);
 					for (var i = 0; i < res.data.data.length; i++) {
-						res.data.data[i].add_time = new Date(res.data.data[i].add_time*1000).Format("yyyy-MM-dd hh:mm:ss");
+						res.data.data[i].add_time = new Date(res.data.data[i].add_time * 1000).Format('yyyy-MM-dd hh:mm:ss');
 					}
 					this.page++;
 					this.list = this.list.concat(res.data.data);
@@ -84,7 +100,7 @@ export default {
 				}
 			});
 		},
-		like(id,index){
+		like(id, index) {
 			uni.showLoading({
 				title: '加载中'
 			});
@@ -97,13 +113,13 @@ export default {
 				success: res => {
 					console.log('点赞:', res);
 					uni.showToast({
-						title:res.data.msg,
-						icon:'none'
+						title: res.data.msg,
+						icon: 'none'
 					});
-					if(res.data.msg == "点赞成功!"){
+					if (res.data.msg == '点赞成功!') {
 						this.list[index].is_fabulous = 1;
 						this.list[index].fabulous_num++;
-					}else{
+					} else {
 						this.list[index].is_fabulous = 0;
 						this.list[index].fabulous_num--;
 					}
@@ -114,7 +130,7 @@ export default {
 			// console.log(urls, current);
 			uni.previewImage({
 				urls,
-				current,
+				current
 				// longPressActions: {
 				// 	itemList: ['发送给朋友', '保存图片', '收藏'],
 				// 	success: function(data) {
@@ -140,11 +156,33 @@ export default {
 				title: '我的主页'
 			});
 		}
-		
-		this.getDynaic(true)
+
+		this.getUserInfo();
+	},
+	onShow() {
+		this.getDynaic(true);
 	},
 	onReachBottom() {
 		this.getDynaic();
+	},
+	onShareAppMessage(res) {
+		// 系统菜单分享
+		if (res.from === 'menu') {
+			var info = uni.getStorageSync('webInfo');
+			return {
+				title: info.title,
+				path: '/pages/index/index',
+				imageUrl: this.imgUrl + info.logo
+			};
+		}
+		// 页面内分享按钮
+		if (res.from === 'button') {
+			return {
+				title: this.userInfo.name + '的主页',
+				path: '/pages/circle/circleDetail?id=' + this.userInfo.id,
+				imageUrl: this.userInfo.header_img
+			};
+		}
 	}
 };
 </script>
@@ -258,6 +296,7 @@ export default {
 		width: 200rpx;
 		height: 100%;
 		background-color: #333333;
+		border-radius: 0;
 	}
 	.send {
 		width: 490rpx;

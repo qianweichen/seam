@@ -3,7 +3,8 @@
 		<view class="bg"></view>
 		<view class="infoBox flex-center">
 			<view>
-				<image class="circle" :src="userInfo.header_img" mode="aspectFill"></image>
+				<image v-if="isLogin" class="circle" :src="userInfo.header_img" mode="aspectFill"></image>
+				<button v-else open-type="getUserInfo" class="clear-btn circle flex-center" @getuserinfo="getUserInfo">点我登陆</button>
 				<view>{{ userInfo.name }}</view>
 			</view>
 		</view>
@@ -20,7 +21,7 @@
 			</view>
 		</view>
 		<view class="list">
-			<navigator :url="'../circle/circleDetail?id='+userInfo.id" hover-class="none" v-if="applyStatus == 3">
+			<navigator :url="'../circle/circleDetail?id=' + userInfo.id" hover-class="none" v-if="applyStatus == 3">
 				<view class="item flex-between">
 					<view class="flex">
 						<image class="icon" src="../../static/icon-sy.png" mode="widthFix"></image>
@@ -30,15 +31,13 @@
 				</view>
 			</navigator>
 			<!-- <navigator url="../circle/circle" hover-class="none"> -->
-			<navigator url="../circle/circleDetail?id=all" hover-class="none">
-				<view class="item flex-between">
-					<view class="flex">
-						<image class="icon" src="../../static/icon-q.png" mode="widthFix"></image>
-						<view>师傅圈</view>
-					</view>
-					<image class="right" src="../../static/right-b.png" mode="widthFix"></image>
+			<view class="item flex-between" @click="goCircle">
+				<view class="flex">
+					<image class="icon" src="../../static/icon-q.png" mode="widthFix"></image>
+					<view>师傅圈</view>
 				</view>
-			</navigator>
+				<image class="right" src="../../static/right-b.png" mode="widthFix"></image>
+			</view>
 		</view>
 		<view class="list-line"></view>
 		<view class="list">
@@ -69,29 +68,50 @@ export default {
 	data() {
 		return {
 			userInfo: '',
-			applyStatus: '' //1 未申请 2待审核 3 已通过 4已拒绝
+			applyStatus: '', //1 未申请 2待审核 3 已通过 4已拒绝
+			isLogin: false
 		};
 	},
 	methods: {
-		goEnter(){
-			if(this.applyStatus==1){
+		goCircle() {
+			if (!this.isLogin) {
+				uni.showToast({
+					title: '请先登陆',
+					icon: 'none'
+				});
+				return;
+			}
+			uni.navigateTo({
+				url: '../circle/circleDetail?id=all'
+			});
+		},
+		goEnter() {
+			if (!this.isLogin) {
+				uni.showToast({
+					title: '请先登陆',
+					icon: 'none'
+				});
+				return;
+			}
+
+			if (this.applyStatus == 1) {
 				uni.navigateTo({
-					url:'../enter/enter'
+					url: '../enter/enter'
 				});
-			}else if(this.applyStatus==2){
+			} else if (this.applyStatus == 2) {
 				uni.showToast({
-					title:'正在审核中，请耐心等待',
-					icon:'none'
+					title: '正在审核中，请耐心等待',
+					icon: 'none'
 				});
-			}else if(this.applyStatus==3){
+			} else if (this.applyStatus == 3) {
 				uni.showToast({
-					title:'已入驻成功',
-					icon:'none'
+					title: '已入驻成功',
+					icon: 'none'
 				});
-			}else if(this.applyStatus==4){
+			} else if (this.applyStatus == 4) {
 				uni.showToast({
-					title:'入驻申请被拒绝，如有疑问请联系客服',
-					icon:'none'
+					title: '入驻申请被拒绝，如有疑问请联系客服',
+					icon: 'none'
 				});
 			}
 		},
@@ -106,13 +126,30 @@ export default {
 					this.applyStatus = res.data.data; //1 未申请 2待审核 3 已通过 4已拒绝
 				}
 			});
+		},
+		getUserInfo(e) {
+			this.login(e.detail, () => {
+				this.isLogin = true;
+				this.getApplyStatus();
+			}); //登陆
 		}
 	},
 	onLoad() {
 		this.userInfo = uni.getStorageSync('userInfo');
 	},
 	onShow() {
-		this.getApplyStatus();
+		if (this.getIsLogin()) {
+			this.isLogin = true;
+			this.getApplyStatus();
+		}
+	},
+	onShareAppMessage(res) {
+		var info = uni.getStorageSync('webInfo');
+		return {
+			title: info.title,
+			path: '/pages/index/index',
+			imageUrl: this.imgUrl + info.logo
+		};
 	}
 };
 </script>
@@ -133,11 +170,12 @@ export default {
 	font-size: 36rpx;
 	font-weight: bold;
 	text-align: center;
-	image {
+	.circle {
 		width: 212rpx;
 		height: 214rpx;
 		border: 2rpx solid #fff;
 		margin-bottom: 20rpx;
+		background-color: #fff;
 	}
 }
 .btnBox {

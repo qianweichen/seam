@@ -159,6 +159,14 @@ export default {
 		getUserInfo(e) {
 			this.login(e.detail); //登陆
 		}
+	},
+	onShareAppMessage(res) {
+		var info = uni.getStorageSync('webInfo');
+		return {
+			title: info.title,
+			path: '/pages/index/index',
+			imageUrl: this.imgUrl + info.logo
+		};
 	}
 };
 </script>
