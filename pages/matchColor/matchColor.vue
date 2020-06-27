@@ -1,9 +1,14 @@
 <template>
-	<view>
+	<view :style="isShowFloor?'height:100vh; overflow:hidden;':''">
 		<view class="top">
 			<view class="tab flex">
 				<view :class="{ active: tabIndex == 0 }" class="flex-center" @click="changeTab(0)">配色</view>
 				<view :class="{ active: tabIndex == 1 }" class="flex-center" @click="changeTab(1)">估价</view>
+			</view>
+			<view class="brand-group flex">
+				<view class="brand flex-center" v-for="(item,index) in oneFloorList" :key="index" @click="getFloor(item.id)">
+					{{item.title}}
+				</view>
 			</view>
 			<view class="btn flex-center" v-if="tabIndex == 0" @click="chooseImg">
 				<image src="../../static/icon-pz.png" mode="widthFix"></image>
@@ -31,7 +36,7 @@
 			</view>
 			<view class="colorBox" :style="'width:' + windowWidth + 'px;' + 'height:' + windowWidth + 'px;'">
 				<image class="bg" :src="imgBg" mode="aspectFill"></image>
-				<view class="picBox flex-between"><image :class="'tile' + seamIndex" v-for="(item, index) in 9" :key="index" src="../../static/dizhuan.png" mode="aspectFill"></image></view>
+				<view class="picBox flex-between"><image :class="'tile' + seamIndex" v-for="(item, index) in 9" :key="index" :src="dizhuan" mode="aspectFill"></image></view>
 			</view>
 			<view class="colorNav flex">
 				<view class="item" :class="{ active: item.active }" v-for="(item, index) in twoLevList" :key="index" @click="clickTwoLev(index)">
@@ -114,6 +119,12 @@
 				<view class="btn active flex-center" @click="count">计算</view>
 			</view>
 		</view>
+		<!-- 选择地砖 -->
+		<view class="floor-group" v-if="isShowFloor">
+			<view class="floor flex-between">
+				<image v-for="(item,index) in twoFloorList" :key="index" :src="imgUrl+item.img" mode="aspectFill" @click="chooseFloor(imgUrl+item.img)"></image>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -135,7 +146,11 @@ export default {
 				l: '',
 				price: '',
 				sum: ''
-			}
+			},
+			dizhuan:'../../static/dizhuan.png',
+			isShowFloor:false,
+			oneFloorList:[],
+			twoFloorList:[],
 		};
 	},
 	methods: {
@@ -169,9 +184,9 @@ export default {
 			uni.chooseImage({
 				count: 1,
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-				sourceType: ['album'], //从相册选择
+				sourceType: ['album','camera'], //从相册选择
 				success: res => {
-					this.imgBg = res.tempFilePaths[0];
+					this.dizhuan = res.tempFilePaths[0];
 				}
 			});
 		},
@@ -231,6 +246,28 @@ export default {
 					this.getTwoLev(res.data.data[0].id, 0);
 				}
 			});
+		},
+		getFloor(pid=0){
+			this.request({
+				url: '/Login/brand',
+				data: {
+					token: uni.getStorageSync('token'),
+					pid
+				},
+				success: res => {
+					console.log('品牌:', res);
+					if(pid==0){
+						this.oneFloorList = res.data.data;
+					}else{
+						this.twoFloorList = res.data.data;
+						this.isShowFloor = true;
+					}
+				}
+			});
+		},
+		chooseFloor(url){
+			this.dizhuan = url;
+			this.isShowFloor= false;
 		}
 	},
 	onLoad() {
@@ -241,6 +278,7 @@ export default {
 		});
 
 		this.getShopSpecs(0);
+		this.getFloor();
 	}
 };
 </script>

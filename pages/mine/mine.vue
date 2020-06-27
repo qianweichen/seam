@@ -131,6 +131,7 @@ export default {
 			this.login(e.detail, () => {
 				this.isLogin = true;
 				this.getApplyStatus();
+				this.userInfo = uni.getStorageSync('userInfo');
 			}); //登陆
 		}
 	},

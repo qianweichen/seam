@@ -24,11 +24,26 @@
 		border-radius: 40rpx;
 		font-size: 26rpx;
 		color: #fff;
-		margin-top: 40rpx;
+		margin-top: 20rpx;
 		image {
 			width: 42rpx;
 			height: auto;
 			margin-right: 24rpx;
+		}
+	}
+	.brand-group {
+		flex-wrap: wrap;
+		padding-top: 40rpx;
+		.brand {
+			width: 20%;
+			height: 50rpx;
+			font-size: 22rpx;
+			background: #ddd;
+			margin-right: 6%;
+			margin-bottom: 20rpx;
+			&:nth-child(4n) {
+				margin-right: 0;
+			}
 		}
 	}
 }
@@ -152,53 +167,80 @@
 	}
 }
 .price {
-	.infoBox{
+	.infoBox {
 		padding: 30rpx;
-		.title{
+		.title {
 			font-size: 30rpx;
 			padding-bottom: 49rpx;
 			font-weight: bold;
 		}
-		.row{
+		.row {
 			padding-bottom: 30rpx;
-			.title2{
+			.title2 {
 				font-size: 22rpx;
 				padding-bottom: 14rpx;
 			}
-			.iptBox{
-				width:310rpx;
-				height:56rpx;
+			.iptBox {
+				width: 310rpx;
+				height: 56rpx;
 				padding: 0 20rpx;
 				box-sizing: border-box;
-				border:2rpx solid rgba(204,204,204,1);
-				border-radius:4rpx;
+				border: 2rpx solid rgba(204, 204, 204, 1);
+				border-radius: 4rpx;
 				font-size: 24rpx;
-				input{
+				input {
 					width: 200rpx;
 				}
 			}
-			.iptBox-l{
+			.iptBox-l {
 				width: 100%;
-				background-color: #CCCCCC;
+				background-color: #cccccc;
 				text-align: right;
-				input{
+				input {
 					width: 100%;
 				}
 			}
 		}
 	}
-	.btnBox{
+	.btnBox {
 		padding: 30rpx;
 		font-size: 26rpx;
-		.btn{
-			height:80rpx;
-			border:2rpx solid rgba(254,209,0,1);
-			border-radius:40rpx;
+		.btn {
+			height: 80rpx;
+			border: 2rpx solid rgba(254, 209, 0, 1);
+			border-radius: 40rpx;
 		}
-		.active{
+		.active {
 			background-color: $themeColor;
 			color: #fff;
 			margin-top: 30rpx;
 		}
 	}
+}
+
+.floor-group {
+	background-color: #fff;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
+	.floor{
+	flex-wrap: wrap;
+		&:after {
+			content: '';
+			width: 26%;
+			border: 1px solid transparent;
+		}
+		image {
+			width: 200rpx;
+			height: 200rpx;
+			margin-bottom: 20rpx;
+			&:nth-child(3n) {
+				margin: 0;
+			}
+		}
+	}
+	
 }
