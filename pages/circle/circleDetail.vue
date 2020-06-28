@@ -38,6 +38,9 @@
 					</view>
 				</view>
 			</view>
+			<view v-if="list.length==0" style="padding-top: 200rpx; text-align: center; font-size: 28rpx; color: #888;">
+				暂无数据
+			</view>
 		</view>
 		<view class="fixedBtn flex" v-if="myCircle">
 			<button open-type="share" class="clear-btn share flex-center">

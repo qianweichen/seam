@@ -35,7 +35,8 @@
 				</view>
 			</view>
 			<view class="colorBox" :style="'width:' + windowWidth + 'px;' + 'height:' + windowWidth + 'px;'">
-				<image class="bg" :src="imgBg" mode="aspectFill"></image>
+				<!-- <image class="bg" :src="imgBg" mode="aspectFill"></image> -->
+				<view class="bg-repeat" :style="'background-image: url('+imgBg+');'"></view>
 				<view class="picBox flex-between"><image :class="'tile' + seamIndex" v-for="(item, index) in 9" :key="index" :src="dizhuan" mode="aspectFill"></image></view>
 			</view>
 			<view class="colorNav flex">

@@ -157,7 +157,11 @@ export default {
 			});
 		},
 		getUserInfo(e) {
-			this.login(e.detail); //登陆
+			this.login(e.detail, () => {
+				if (this.getIsLogin()) {
+					this.isLogin = true;
+				}
+			}); //登陆
 		}
 	},
 	onShareAppMessage(res) {

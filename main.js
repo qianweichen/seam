@@ -11,41 +11,47 @@ Vue.prototype.login = function(userInfo,callBack) {
 	if(!userInfo.rawData){
 		return;
 	}
-	var query = {
-		signature: userInfo.signature,
-		encryptedData: userInfo.encryptedData,
-		iv: userInfo.iv,
-		rawData: userInfo.rawData
-	}
 	uni.showLoading({
 		title: '加载中'
 	});
-	this.request({
-		url: '/Login/dologin',
-		data: {
-			code: uni.getStorageSync('code'),
-			...query
-		},
+	uni.login({
+		provider: 'weixin',
 		success: res => {
-			console.log("登陆:", res);
-			uni.setStorageSync('openid', res.data.data.openID);
-			uni.setStorageSync('token', res.data.data.token);
-
+			console.log('code:', res.code);
+			var query = {
+				code:res.code,
+				signature: userInfo.signature,
+				encryptedData: userInfo.encryptedData,
+				iv: userInfo.iv,
+				rawData: userInfo.rawData
+			}
 			this.request({
-				url: '/User/userInfo',
+				url: '/Login/dologin',
 				data: {
-					token: uni.getStorageSync('token'),
+					...query
 				},
 				success: res => {
-					console.log("用户个人信息:", res);
-					uni.setStorageSync('userInfo', res.data.data);
-					uni.hideLoading();
-					if(callBack){
-						callBack();
-					}
+					console.log("登陆:", res);
+					uni.setStorageSync('openid', res.data.data.openID);
+					uni.setStorageSync('token', res.data.data.token);
+			
+					this.request({
+						url: '/User/userInfo',
+						data: {
+							token: uni.getStorageSync('token'),
+						},
+						success: res => {
+							console.log("用户个人信息:", res);
+							uni.setStorageSync('userInfo', res.data.data);
+							uni.hideLoading();
+							if(callBack){
+								callBack();
+							}
+						},
+					});
 				},
 			});
-		},
+		}
 	});
 }
 //获取是否登陆
