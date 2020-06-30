@@ -91,6 +91,7 @@
 			left: 0;
 			top: 0;
 			z-index: -1;
+			background-size: 60px auto;
 		}
 		.bg {
 			width: 100%;
@@ -129,9 +130,11 @@
 		}
 	}
 	.colorNav {
+		flex-wrap: wrap;
 		padding: 30rpx;
 		.item {
-			margin-right: 40rpx;
+			width: 57px;
+			text-align: center;
 			margin-bottom: 27rpx;
 			font-size: 26rpx;
 			color: #999999;
