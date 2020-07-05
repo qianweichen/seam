@@ -39,9 +39,10 @@
 				<view class="bg-repeat" :style="'background-image: url('+imgBg+');'"></view>
 				<view class="picBox flex-between"><image :class="'tile' + seamIndex" v-for="(item, index) in 9" :key="index" :src="dizhuan" mode="aspectFill"></image></view>
 			</view>
+			<view class="colorNav-title">选择美缝剂：</view>
 			<view class="colorNav flex">
-				<view class="item" :class="{ active: item.active }" v-for="(item, index) in twoLevList" :key="index" @click="clickTwoLev(index)">
-					<image class="circle" :src="item.img" mode="aspectFill"></image>
+				<view class="item flex" :class="{ active: item.active }" v-for="(item, index) in twoLevList" :key="index" @click="clickTwoLev(index)">
+					<image :src="item.img" mode="aspectFill"></image>
 					<view>{{ item.name }}</view>
 				</view>
 			</view>
